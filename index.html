@@ -3,155 +3,145 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Venus Book - Facebook Clone</title>
+<title>VenusBook - Live</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
 body{background:#f0f2f5}
 .header{background:#fff;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 5px #0001}
-.logo{color:#1877f2;font-size:28px;font-weight:900}
-.header input{padding:8px 15px;border-radius:20px;border:0;background:#f0f2f5;width:200px}
-.main{max-width:600px;margin:15px auto;padding:0 10px}
-.create{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 1px 3px #0001}
-.create-top{display:flex;gap:10px;align-items:center}
-.create-top img{width:40px;height:40px;border-radius:50%;background:#ddd}
-.create-top input{flex:1;background:#f0f2f5;border:0;padding:12px 15px;border-radius:25px;cursor:pointer}
-.create-btns{display:flex;justify-content:space-around;margin-top:12px;border-top:1px solid #eee;padding-top:10px}
-.create-btns button{border:0;background:0;padding:8px 15px;border-radius:10px;font-weight:bold;cursor:pointer}
-.story-bar{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px}
-.story{min-width:110px;height:190px;background:#fff;border-radius:15px;position:relative;overflow:hidden;box-shadow:0 1px 3px #0001;cursor:pointer;flex-shrink:0}
-.story img{width:100%;height:100%;object-fit:cover}
-.story p{position:absolute;bottom:5px;left:5px;color:#fff;font-weight:bold;font-size:12px;text-shadow:0 1px 3px #000}
-.post{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 1px 3px #0001}
+.logo{color:#1877f2;font-size:26px;font-weight:900}
+.main{max-width:600px;margin:10px auto;padding:0 10px}
+.create{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px}
+.create-top{display:flex;gap:10px}
+.create-top img{width:40px;height:40px;border-radius:50%}
+.create-top input{flex:1;background:#f0f2f5;border:0;padding:12px;border-radius:20px}
+.post{background:#fff;border-radius:10px;padding:15px;margin-bottom:12px}
 .post-head{display:flex;gap:10px;align-items:center}
-.post-head img{width:40px;height:40px;border-radius:50%;background:#ddd}
-.post-head b{font-size:15px}
-.post-head span{font-size:12px;color:#666}
-.post-text{margin:12px 0;font-size:16px;line-height:1.4}
-.post img.post-img{width:100%;border-radius:10px;margin-top:10px;max-height:400px;object-fit:cover}
-.actions{display:flex;justify-content:space-around;border-top:1px solid #eee;border-bottom:1px solid #eee;margin:12px 0;padding:8px 0}
-.actions button{border:0;background:0;font-weight:bold;color:#65676b;padding:8px 15px;border-radius:5px;cursor:pointer;flex:1}
-.actions button.liked{color:#1877f2}
+.post-head img{width:40px;height:40px;border-radius:50%}
+.post img{width:100%;border-radius:10px;margin-top:10px;max-height:400px;object-fit:cover}
+.actions{display:flex;justify-content:space-around;border-top:1px solid #eee;margin-top:10px;padding-top:8px}
+.actions button{border:0;background:0;font-weight:bold;color:#65676b;flex:1;padding:8px;cursor:pointer}
 .comments{margin-top:10px}
-.comment{background:#f0f2f5;padding:8px 12px;border-radius:18px;margin:5px 0;font-size:14px}
-.comment b{margin-right:5px}
-.comment-box{display:flex;gap:8px;margin-top:10px}
-.comment-box input{flex:1;background:#f0f2f5;border:0;padding:10px 15px;border-radius:20px}
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:#0008;display:none;justify-content:center;align-items:center;z-index:200;padding:15px}
+.comment{display:flex;gap:8px;margin:6px 0}
+.comment div{background:#f0f2f5;padding:8px 12px;border-radius:15px;font-size:14px;max-width:85%}
+.comment img{width:100%;border-radius:10px;margin-top:5px;max-width:150px}
+.cbox{display:flex;gap:8px;margin-top:10px;align-items:center}
+.cbox input{flex:1;background:#f0f2f5;border:0;padding:10px 15px;border-radius:20px}
+.cbox label{background:#e4e6eb;padding:8px 12px;border-radius:20px;cursor:pointer}
+.modal{position:fixed;inset:0;background:#0008;display:none;justify-content:center;align-items:center;z-index:200;padding:15px}
 .modal.active{display:flex}
 .modal-box{background:#fff;width:100%;max-width:500px;border-radius:10px;padding:20px}
-.modal-box textarea{width:100%;height:100px;border:0;font-size:18px;resize:none;outline:none;margin:15px 0}
-.modal-box input{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;margin-bottom:10px}
+.modal-box textarea{width:100%;height:80px;border:0;outline:none;font-size:18px}
+.btn{width:100%;background:#1877f2;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:bold;margin-top:10px;cursor:pointer}
 </style>
 </head>
 <body>
 
-<div class="header">
-<div class="logo">venusbook</div>
-<input type="text" placeholder="🔍 Search">
-<div>🔔</div>
-</div>
+<div class="header"><div class="logo">venusbook</div><div>Live 🌐</div></div>
 
 <div class="main">
-
 <div class="create">
 <div class="create-top">
 <img src="https://i.pravatar.cc/100?img=5">
 <input type="text" placeholder="What's on your mind, Prabhu?" onclick="openModal()">
 </div>
-<div class="create-btns">
-<button>🔴 Live</button>
-<button>🖼️ Photo</button>
-<button>😊 Feeling</button>
 </div>
-</div>
-
-<div class="story-bar">
-<div class="story" style="background:#1877f2"><img src="https://picsum.photos/200/300?1"><p>➕ Create Story</p></div>
-<div class="story"><img src="https://picsum.photos/200/300?2"><p>Anuj Borah</p></div>
-<div class="story"><img src="https://picsum.photos/200/300?3"><p>Venus Art</p></div>
-<div class="story"><img src="https://picsum.photos/200/300?4"><p>Teok</p></div>
-</div>
-
-<div id="feed"></div>
-
+<div id="feed">Loading... ⏳</div>
 </div>
 
 <div class="modal" id="modal" onclick="if(event.target==this)closeModal()">
 <div class="modal-box">
-<div style="display:flex;justify-content:space-between"><h3>Create Post</h3><button onclick="closeModal()" style="border:0;background:#eee;padding:5px 10px;border-radius:50%">✕</button></div>
-<textarea id="postText" placeholder="What's on your mind?"></textarea>
-<input type="text" id="postImg" placeholder="Photo Link (Optional) - https://...">
-<button onclick="addPost()" style="width:100%;background:#1877f2;color:#fff;padding:12px;border:0;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer">Post</button>
+<h3>Create Post</h3>
+<textarea id="pText" placeholder="কি ভাবি আছে?"></textarea>
+<input type="file" id="pFile" accept="image/*">
+<button class="btn" onclick="createPost()">Post - সকলোৱে দেখিব 🚀</button>
+<button onclick="closeModal()" style="width:100%;margin-top:8px;padding:10px;border:0;background:#eee;border-radius:10px">Cancel</button>
 </div>
 </div>
 
-<script>
-let posts = JSON.parse(localStorage.getItem('venus_posts') || '[]');
-if(posts.length==0){
- posts = [
-  {id:1,name:"Venus Art Gallery Teok",time:"2h ago",text:"আজি নতুন Art বনালো! কেনে পালে জনাব দেই! 🎨❤️",img:"https://picsum.photos/600/400?random=1",likes:124,liked:false,comments:[{name:"Anuj",text:"বহুত ধুনীয়া!"}]},
-  {id:2,name:"Anuj Borah",time:"5h ago",text:"Facebook ৰ দৰে App GitHub ত বনালো! 🚀",img:"https://picsum.photos/600/400?random=2",likes:89,liked:false,comments:[]}
- ];
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, orderBy, query, serverTimestamp, doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+// 👇 ইয়াত আপোনাৰ Firebase Config Paste কৰক 👇
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "YOUR_APP_ID"
+};
+// 👆
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+window.openModal = ()=>document.getElementById('modal').classList.add('active')
+window.closeModal = ()=>document.getElementById('modal').classList.remove('active')
+
+window.createPost = async ()=>{
+ let text = document.getElementById('pText').value;
+ let file = document.getElementById('pFile').files[0];
+ if(!text &&!file) return alert("কিবা লিখক বা Photo দিয়ক!");
+ let imgUrl = "";
+ if(file){
+  let r = ref(storage, 'posts/'+Date.now()+'_'+file.name);
+  await uploadBytes(r,file);
+  imgUrl = await getDownloadURL(r);
+ }
+ await addDoc(collection(db,"posts"),{name:"Venus Art Gallery",text:text,img:imgUrl,likes:0,comments:[],time:serverTimestamp()});
+ document.getElementById('pText').value=""; document.getElementById('pFile').value="";
+ closeModal();
 }
 
-function render(){
+// Live Feed - সকলোৱে একেলগে চাব
+const q = query(collection(db,"posts"),orderBy("time","desc"));
+onSnapshot(q,(snap)=>{
  let html="";
- posts.forEach(p=>{
+ snap.forEach(d=>{
+  let p=d.data(); let id=d.id;
   html+=`
   <div class="post">
-   <div class="post-head">
-    <img src="https://i.pravatar.cc/100?u=${p.id}">
-    <div><b>${p.name}</b><br><span>${p.time}</span></div>
-   </div>
-   <div class="post-text">${p.text}</div>
-   ${p.img?`<img class="post-img" src="${p.img}">`:''}
-   <div style="display:flex;justify-content:space-between;padding:10px 0;color:#65676b;font-size:14px"><span>👍 ${p.likes} likes</span><span>${p.comments.length} comments</span></div>
+   <div class="post-head"><img src="https://i.pravatar.cc/100?u=${id}"><div><b>${p.name}</b><br><small>${p.time?new Date(p.time.seconds*1000).toLocaleString():'Just now'}</small></div></div>
+   <div style="margin:10px 0">${p.text}</div>
+   ${p.img?`<img src="${p.img}">`:''}
    <div class="actions">
-    <button class="${p.liked?'liked':''}" onclick="like(${p.id})">👍 Like</button>
-    <button onclick="document.getElementById('cinput${p.id}').focus()">💬 Comment</button>
-    <button>↗️ Share</button>
+    <button onclick="likePost('${id}')">👍 Like (${p.likes||0})</button>
+    <button>💬 Comment (${p.comments?.length||0})</button>
    </div>
    <div class="comments">
-    ${p.comments.map(c=>`<div class="comment"><b>${c.name}:</b> ${c.text}</div>`).join('')}
-    <div class="comment-box">
-     <img src="https://i.pravatar.cc/100?img=5" style="width:32px;height:32px;border-radius:50%">
-     <input id="cinput${p.id}" placeholder="Write a comment..." onkeydown="if(event.key==='Enter')addComment(${p.id},this.value)">
+    ${(p.comments||[]).map(c=>`<div class="comment"><div><b>${c.name}:</b> ${c.text} ${c.img?`<br><img src="${c.img}">`:''}</div></div>`).join('')}
+    <div class="cbox">
+     <input id="ctxt${id}" placeholder="Comment লিখক...">
+     <label>📷<input type="file" id="cfile${id}" hidden accept="image/*"></label>
+     <button onclick="commentPost('${id}')" style="background:#1877f2;color:#fff;border:0;padding:8px 15px;border-radius:20px">Post</button>
     </div>
    </div>
   </div>`;
  });
- document.getElementById('feed').innerHTML = html;
- localStorage.setItem('venus_posts',JSON.stringify(posts));
+ document.getElementById('feed').innerHTML = html || "<p style='text-align:center'>কোনো Post নাই - প্ৰথম Post কৰক!</p>";
+});
+
+window.likePost = async (id)=>{
+ await updateDoc(doc(db,"posts",id),{likes:increment(1)});
 }
 
-function like(id){
- let p = posts.find(x=>x.id==id);
- p.liked=!p.liked;
- p.likes += p.liked?1:-1;
- render();
+window.commentPost = async (id)=>{
+ let txt = document.getElementById('ctxt'+id).value;
+ let file = document.getElementById('cfile'+id).files[0];
+ if(!txt &&!file) return;
+ let imgUrl="";
+ if(file){
+  let r=ref(storage,'comments/'+Date.now()+'_'+file.name);
+  await uploadBytes(r,file);
+  imgUrl=await getDownloadURL(r);
+ }
+ await updateDoc(doc(db,"posts",id),{comments:arrayUnion({name:"User",text:txt,img:imgUrl})});
+ document.getElementById('ctxt'+id).value="";
 }
-
-function addComment(id,val){
- if(!val.trim())return;
- let p = posts.find(x=>x.id==id);
- p.comments.push({name:"You",text:val});
- render();
-}
-
-function openModal(){document.getElementById('modal').classList.add('active')}
-function closeModal(){document.getElementById('modal').classList.remove('active')}
-
-function addPost(){
- let text = document.getElementById('postText').value;
- let img = document.getElementById('postImg').value;
- if(!text.trim())return alert("কিবা লিখক!");
- posts.unshift({id:Date.now(),name:"Anuj Borah",time:"Just now",text:text,img:img,likes:0,liked:false,comments:[]});
- document.getElementById('postText').value=""; document.getElementById('postImg').value="";
- closeModal();
- render();
-}
-
-render();
 </script>
 </body>
 </html>
