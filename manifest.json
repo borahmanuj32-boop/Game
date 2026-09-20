@@ -1,15 +1,17 @@
 {
-  "name": "VenusBook - Art Gallery",
-  "short_name": "VenusBook",
+  "name": "Manuj Art Blog - Venus Art Gallery",
+  "short_name": "Manuj Art",
+  "description": "Official Art Blog of Manuj Borah - Venus Art Gallery Teok, Assam. Explore paintings, art tutorials and artworks.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1877f2",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
   "icons": [
     {
-      "src": "https://i.pravatar.cc/512?img=5",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
