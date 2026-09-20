@@ -1,40 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Venus Ludo King</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>মনোজ ভেনাচ - Public Blog</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:white}
-h1{margin:10px;color:#facc15}
-#board{width:95vw;max-width:500px;aspect-ratio:1;background:white;border-radius:12px;display:grid;grid-template-columns:repeat(15,1fr);grid-template-rows:repeat(15,1fr);border:4px solid #000;position:relative}
-.cell{border:0.5px solid #ddd;display:flex;align-items:center;justify-content:center}
-.home{border:2px solid #000;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:10px}
-.r{background:#ef4444}.g{background:#22c55e}.y{background:#eab308}.b{background:#3b82f6}
-.token{width:22px;height:22px;border-radius:50%;border:2px solid #000;margin:3px;cursor:pointer}
-.rt{background:red}.gt{background:green}.yt{background:#ca8a04}.bt{background:blue}
-#dice{width:70px;height:70px;background:white;color:black;font-size:32px;font-weight:bold;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;margin:15px;border:2px solid #000}
-#status{background:#1e293b;padding:8px 15px;border-radius:20px;margin:10px}
+:root{--main:#3b82f6}*{margin:0;padding:0;box-sizing:border-box}body{font-family:sans-serif;background:#f8fafc}
+header{text-align:center;padding:40px;background:linear-gradient(180deg,#dbeafe,white);border-bottom:3px solid var(--main)}
+header img{width:120px;height:120px;border-radius:50%;border:4px solid var(--main)}
+.posts{max-width:720px;margin:20px auto;padding:0 20px}
+.post{background:white;border-left:5px solid var(--main);padding:20px;margin:20px 0;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.post img{width:100%;border-radius:10px;margin-top:10px}
+.admin-btn{position:fixed;bottom:20px;right:20px;background:#0f172a;color:white;padding:12px 20px;border-radius:30px;border:none;cursor:pointer}
+#adminPanel{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:100;overflow:auto}
+.box{background:white;max-width:600px;margin:40px auto;padding:25px;border-radius:15px}
+input,textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
+.btn{background:var(--main);color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:bold}
+.btn-red{background:#ef4444}
 </style>
 </head>
 <body>
-<h1>🎲 VENUS LUDO KING 🎲</h1>
-<div id="status">🔴 RED ৰ পাল - Dice Click কৰক!</div>
-<div id="board"></div>
-<div id="dice">🎲</div>
-<button onclick="location.reload()" style="padding:10px 20px;background:#facc15;border:none;border-radius:8px;font-weight:bold">New Game</button>
+<header>
+<img src="https://i.pravatar.cc/300?u=manojvenus">
+<h1>মনোজ ভেনাচ</h1><p>Public Blog 🌍 | 📍 গুৱাহাটী</p>
+</header>
+<div class="posts" id="postList"><p style="text-align:center;padding:30px">Loading...</p></div>
+<button class="admin-btn" onclick="openAdmin()">🔑 Admin</button>
+
+<div id="adminPanel">
+<div class="box" id="loginBox">
+<h2 style="text-align:center">🔒 Admin Login</h2>
+<input type="password" id="pass" placeholder="Password দিয়ক">
+<p style="font-size:12px;text-align:center;color:#666">Password Hide ••••</p>
+<button class="btn" onclick="login()" style="width:100%;margin-top:10px">Login</button>
+<button class="btn btn-red" onclick="closeAdmin()" style="width:100%;margin-top:8px">Close</button>
+</div>
+<div class="box" id="dashBox" style="display:none">
+<h2>👑 মনোজ ভেনাচ Dashboard</h2>
+<input id="t" placeholder="Title">
+<textarea id="d" rows="4" placeholder="কাহিনী..."></textarea>
+<input type="file" id="imgFile" accept="image/*">
+<button class="btn" onclick="publish()" style="width:100%">🚀 Publish - সকলোৱে দেখিব</button>
+<div id="adminPosts" style="margin-top:20px"></div>
+<button class="btn btn-red" onclick="logout()" style="width:100%;margin-top:20px">Logout</button>
+</div>
+</div>
+
 <script>
-const board=document.getElementById('board'),diceEl=document.getElementById('dice'),statusEl=document.getElementById('status');
-let turn=0;const colors=['r','g','y','b'],names=['🔴 RED','🟢 GREEN','🟡 YELLOW','🔵 BLUE'];let dice=1,canMove=false;
-for(let r=0;r<15;r++){for(let c=0;c<15;c++){let d=document.createElement('div');d.className='cell';
-if(r<6&&c<6){d.classList.add('home','r');if((r==1||r==4)&&(c==1||c==4)){let t=document.createElement('div');t.className='token rt';t.dataset.color='r';d.appendChild(t)}}
-else if(r<6&&c>8){d.classList.add('home','g');if((r==1||r==4)&&(c==10||c==13)){let t=document.createElement('div');t.className='token gt';t.dataset.color='g';d.appendChild(t)}}
-else if(r>8&&c<6){d.classList.add('home','y');if((r==10||r==13)&&(c==1||c==4)){let t=document.createElement('div');t.className='token yt';t.dataset.color='y';d.appendChild(t)}}
-else if(r>8&&c>8){d.classList.add('home','b');if((r==10||r==13)&&(c==10||c==13)){let t=document.createElement('div');t.className='token bt';t.dataset.color='b';d.appendChild(t)}}
-board.appendChild(d);}}
-diceEl.onclick=()=>{if(canMove)return;dice=Math.floor(Math.random()*6)+1;diceEl.textContent=dice;canMove=true;statusEl.textContent=`${names[turn]} - ${dice} পালে!`;if(dice!=6)setTimeout(()=>{if(canMove){canMove=false;turn=(turn+1)%4;statusEl.textContent=`${names[turn]} ৰ পাল`;diceEl.textContent='🎲';}},2000);};
-board.addEventListener('click',e=>{if(!e.target.classList.contains('token')||!canMove)return;if(e.target.dataset.color!=colors[turn])return;canMove=false;if(dice!=6)turn=(turn+1)%4;statusEl.textContent=`${names[turn]} ৰ পাল`;diceEl.textContent='🎲';});
+var firebaseConfig={databaseURL:"https://manoj-venus-default-rtdb.firebaseio.com"};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.database().ref('posts');
+
+function renderPublic(){
+db.on('value',snap=>{
+let data=snap.val();let html='';
+if(!data){html='<p style="text-align:center">Post নাই</p>';}
+else{
+Object.keys(data).reverse().forEach(k=>{
+let p=data[k];
+html+=`<div class="post"><small>${p.date}</small><h3>${p.title}</h3><p>${p.desc}</p>${p.img?`<img src="${p.img}">`:''}</div>`;
+});
+}
+document.getElementById('postList').innerHTML=html;
+});
+}
+function openAdmin(){document.getElementById('adminPanel').style.display='block';}
+function closeAdmin(){document.getElementById('adminPanel').style.display='none';}
+function login(){
+if(document.getElementById('pass').value==='manuj123'){
+document.getElementById('loginBox').style.display='none';
+document.getElementById('dashBox').style.display='block';
+loadAdmin();
+}else alert('ভুল Password!');
+}
+function logout(){document.getElementById('dashBox').style.display='none';document.getElementById('loginBox').style.display='block';document.getElementById('pass').value='';closeAdmin();}
+function publish(){
+let title=document.getElementById('t').value;let desc=document.getElementById('d').value;
+let file=document.getElementById('imgFile').files[0];
+if(!title||!desc){alert('লিখক!');return;}
+if(file){
+let r=new FileReader();r.onload=e=>{db.push({title,desc,img:e.target.result,date:new Date().toLocaleDateString('as-IN')});alert('✅ Public হল!');clear();};r.readAsDataURL(file);
+}else{db.push({title,desc,img:'',date:new Date().toLocaleDateString('as-IN')});alert('✅ Public হল!');clear();}
+}
+function clear(){document.getElementById('t').value='';document.getElementById('d').value='';document.getElementById('imgFile').value='';}
+function loadAdmin(){db.on('value',snap=>{let data=snap.val();let h='';if(data){Object.keys(data).forEach(k=>{h+=`<div style="border:1px solid #eee;padding:8px;margin:5px 0;display:flex;justify-content:space-between"><span>${data[k].title}</span><button class="btn btn-red" style="padding:3px 8px" onclick="delPost('${k}')">Delete</button></div>`;});}document.getElementById('adminPosts').innerHTML=h;});}
+function delPost(k){if(confirm('Delete?')) db.child(k).remove();}
+renderPublic();
 </script>
 </body>
-  </html>
+</html>
