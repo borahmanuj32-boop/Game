@@ -1,0 +1,15 @@
+{
+  "name": "VenusBook - Art Gallery",
+  "short_name": "VenusBook",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1877f2",
+  "icons": [
+    {
+      "src": "https://i.pravatar.cc/512?img=5",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
