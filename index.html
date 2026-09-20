@@ -3,47 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manuj Art Blog</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1e3a8a">
+<title>Venus Gallery - Admin Hidden</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#f0f2f5;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:20px}
-.box{background:#fff;padding:30px;border-radius:20px;box-shadow:0 5px 20px #0002;max-width:400px;width:100%}
-.logo{font-size:60px;margin-bottom:15px}
-h1{color:#1e3a8a;margin-bottom:10px}
-p{color:#666;margin-bottom:20px}
-.btn{display:block;width:100%;background:#1e3a8a;color:#fff;padding:15px;border-radius:12px;text-decoration:none;font-weight:bold;margin:10px 0;font-size:18px}
-.btn2{background:#e4e6eb;color:#333}
-.install{background:#1877f2;color:#fff;border:0;padding:12px 20px;border-radius:25px;font-weight:bold;margin-top:15px;display:none}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:white;font-family:system-ui;padding:12px}
+h1{text-align:center;color:#a78bfa;margin:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;background:#1a1a2e;padding:12px;border-radius:12px;margin-bottom:12px}
+button{padding:10px 15px;border-radius:20px;border:none;font-weight:bold;cursor:pointer;margin:3px}
+.b-admin{background:#f59e0b;color:black}
+.b-logout{background:#ef4444;color:white}
+.b-add{background:#a78bfa;color:black;width:92%}
+.b-buy{background:#22c55e;color:black;width:100%;padding:12px;margin-top:8px}
+.b-like{background:#222;color:#ff6b9d;border:1px solid #444}
+.b-del{background:#ef4444;color:white}
+.hidden{display:none}
+.box{background:#1e1e2f;padding:15px;border-radius:12px;margin-bottom:12px;border:1px solid #333;text-align:center}
+input{width:92%;padding:11px;margin:5px 0;border-radius:8px;background:#222;color:white;border:1px solid #444}
+.card{background:#1e1e2f;border-radius:15px;padding:12px;margin-bottom:15px}
+.card img{width:100%;border-radius:10px;background:#000;max-height:500px;object-fit:contain}
 </style>
 </head>
 <body>
 
-<div class="box">
-<div class="logo">🎨</div>
-<h1>Manuj Art Blog</h1>
-<p>Venus Art Gallery Teok<br>Official Art Blog</p>
-
-<a class="btn" href="https://manuj.art.blog" target="_blank">📖 Blog খুলক</a>
-<a class="btn btn2" href="https://borahmanuj32-boop.github.io/Game/">👍 VenusBook খুলক</a>
-
-<button class="install" id="installBtn">📲 App Install কৰক</button>
-
-<p style="margin-top:15px;font-size:13px;color:#999">App Install কৰিলে ফোনত Icon আহিব</p>
+<h1>🎨 Venus Gallery</h1>
+<div class="topbar">
+<span id="status">👤 Guest View</span>
+<button id="adminBtn" class="b-admin" onclick="document.getElementById('loginBox').classList.toggle('hidden')">🔑 Admin</button>
+<button id="logoutBtn" class="b-logout hidden" onclick="adminLogout()">Logout</button>
 </div>
 
-<script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e)=>{
- e.preventDefault(); deferredPrompt=e;
- document.getElementById('installBtn').style.display='inline-block';
-});
-document.getElementById('installBtn').onclick = async ()=>{
- if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; }
-}
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
-</script>
+<div id="loginBox" class="box hidden">
+<h3>🔐 Admin Access</h3>
+<input id="uid" placeholder="Admin ID"><br>
+<input id="upass" type="password" placeholder="Password - Hide থাকিব"><br>
+<button class="b-admin" style="width:92%" onclick="adminLogin()">Login</button>
+<p style="font-size:10px;color:#555;margin-top:8px">🔒 Secure - Password Hide</p>
+</div>
 
+<div id="uploadBox" class="box hidden" style="border:2px dashed #a78bfa">
+<h3>➕ Add Painting</h3>
+<input type="file" id="fileIn" accept="image/*"><br>
+<input id="titleIn" placeholder="Title"><br>
+<input id="priceIn" placeholder="Price"><br>
+<button class="b-add" onclick="addPaint()">📤 Upload</button>
+</div>
+
+<div id="gallery"></div>
+
+<script>
+let paintings=JSON.parse(localStorage.getItem('venus_hide')||'[]');
+if(paintings.length==0){paintings=[{id:1,title:"Serenity in Green - Original",price:"25000",likes:124,image:"https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600"}]}
+let isAdmin=localStorage.getItem('isAdmin')==='true';
+
+// 🔒 Password Hide - Encode কৰা আছে - কোনেও সহজে দেখা নাপায়!
+// Original: manuj / venus@2024
+const _0x1 = "bWFudWo="; // manuj (base64)
+const _0x2 = "dmVudXNAMjAyNA=="; // venus@2024 (base64)
+
+function save(){localStorage.setItem('venus_hide',JSON.stringify(paintings))}
+
+function adminLogin(){
+ const id=btoa(document.getElementById('uid').value.trim());
+ const pass=btoa(document.getElementById('upass').value.trim());
+ if(id===_0x1 && pass===_0x2){
+   isAdmin=true; localStorage.setItem('isAdmin','true');
+   document.getElementById('loginBox').classList.add('hidden');
+   document.getElementById('uid').value=""; document.getElementById('upass').value="";
+   updateUI(); alert("✅ Admin Login Success!");
+ } else { alert("❌ Wrong ID/Password!"); }
+}
+function adminLogout(){isAdmin=false; localStorage.removeItem('isAdmin'); updateUI()}
+function updateUI(){
+ document.getElementById('status').innerHTML=isAdmin?"👑 Admin Mode":"👤 Guest Mode";
+ document.getElementById('adminBtn').classList.toggle('hidden',isAdmin);
+ document.getElementById('logoutBtn').classList.toggle('hidden',!isAdmin);
+ document.getElementById('uploadBox').classList.toggle('hidden',!isAdmin);
+ render();
+}
+function addPaint(){
+ const file=document.getElementById('fileIn').files[0]; const title=document.getElementById('titleIn').value||"Untitled"; const price=document.getElementById('priceIn').value||"25000";
+ if(!file){alert("Photo লওক");return}
+ const r=new FileReader(); r.onload=e=>{paintings.unshift({id:Date.now(),title,price,likes:0,image:e.target.result}); save(); render();}; r.readAsDataURL(file);
+}
+function render(){
+ const g=document.getElementById('gallery'); g.innerHTML="";
+ paintings.forEach(p=>{
+   g.innerHTML+=`<div class="card"><img src="${p.image}"><h3>${p.title}</h3><p style="color:#a78bfa">Rs ${p.price}</p><button class="b-like" onclick="like(${p.id})">❤️ ${p.likes}</button><button class="b-buy" onclick="buy('${p.title}')">🛒 Buy</button><br>${isAdmin?`<button class="b-del" onclick="delP(${p.id})" style="width:100%;margin-top:8px">🗑️ Delete Painting</button>`:``}</div>`;
+ });
+}
+function like(id){paintings.find(x=>x.id==id).likes++; save(); render()}
+function delP(id){if(confirm("Delete কৰিব নে?")){paintings=paintings.filter(x=>x.id!=id); save(); render()}}
+function buy(t){window.open(`https://wa.me/916000000000?text=I want ${t}`,"_blank")}
+updateUI();
+</script>
 </body>
 </html>
