@@ -2,91 +2,133 @@
 <html>
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>মনোজ ভেনাচ - Public Blog</title>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<title>মনোজ ভেনাচ - Blog</title>
 <style>
 :root{--main:#3b82f6}*{margin:0;padding:0;box-sizing:border-box}body{font-family:sans-serif;background:#f8fafc}
-header{text-align:center;padding:40px;background:linear-gradient(180deg,#dbeafe,white);border-bottom:3px solid var(--main)}
-header img{width:120px;height:120px;border-radius:50%;border:4px solid var(--main)}
+header{text-align:center;padding:35px 20px;background:linear-gradient(180deg,#dbeafe,white);border-bottom:3px solid var(--main)}
+header img{width:130px;height:130px;border-radius:50%;border:4px solid var(--main);object-fit:cover}
 .posts{max-width:720px;margin:20px auto;padding:0 20px}
-.post{background:white;border-left:5px solid var(--main);padding:20px;margin:20px 0;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
-.post img{width:100%;border-radius:10px;margin-top:10px}
-.admin-btn{position:fixed;bottom:20px;right:20px;background:#0f172a;color:white;padding:12px 20px;border-radius:30px;border:none;cursor:pointer}
+.post{background:white;border-left:5px solid var(--main);padding:18px;margin:18px 0;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.post img{width:100%;border-radius:10px;margin-top:12px;max-height:400px;object-fit:cover}
+.admin-btn{position:fixed;bottom:20px;right:20px;background:#0f172a;color:white;padding:12px 20px;border-radius:30px;border:none;cursor:pointer;z-index:99}
 #adminPanel{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:100;overflow:auto}
-.box{background:white;max-width:600px;margin:40px auto;padding:25px;border-radius:15px}
-input,textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:8px}
-.btn{background:var(--main);color:white;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:bold}
+.box{background:white;max-width:600px;margin:25px auto;padding:20px;border-radius:15px}
+input,textarea{width:100%;padding:11px;margin:8px 0;border:1px solid #ccc;border-radius:8px;font-size:15px}
+.btn{background:var(--main);color:white;border:none;padding:11px 20px;border-radius:20px;cursor:pointer;font-weight:bold;width:100%;margin-top:8px}
 .btn-red{background:#ef4444}
 </style>
 </head>
 <body>
 <header>
-<img src="https://i.pravatar.cc/300?u=manojvenus">
-<h1>মনোজ ভেনাচ</h1><p>Public Blog 🌍 | 📍 গুৱাহাটী</p>
+<img id="pp" src="https://i.pravatar.cc/300?u=manoj">
+<h1>মনোজ ভেনাচ</h1><p>Public Blog 🌍 | 📍 গুৱাহাটী, অসম</p>
+<p style="margin-top:8px;font-size:13px;color:#475569">Admin এ Post কৰিলে ইয়াত দেখিব</p>
 </header>
-<div class="posts" id="postList"><p style="text-align:center;padding:30px">Loading...</p></div>
+
+<div class="posts" id="list"></div>
 <button class="admin-btn" onclick="openAdmin()">🔑 Admin</button>
 
 <div id="adminPanel">
 <div class="box" id="loginBox">
 <h2 style="text-align:center">🔒 Admin Login</h2>
-<input type="password" id="pass" placeholder="Password দিয়ক">
-<p style="font-size:12px;text-align:center;color:#666">Password Hide ••••</p>
-<button class="btn" onclick="login()" style="width:100%;margin-top:10px">Login</button>
-<button class="btn btn-red" onclick="closeAdmin()" style="width:100%;margin-top:8px">Close</button>
+<input type="password" id="pass" placeholder="Password">
+<p style="text-align:center;font-size:12px;color:#666">Password: manuj123 • Hide •</p>
+<button class="btn" onclick="login()">Login</button>
+<button class="btn btn-red" onclick="closeAdmin()">Close</button>
 </div>
 <div class="box" id="dashBox" style="display:none">
-<h2>👑 মনোজ ভেনাচ Dashboard</h2>
-<input id="t" placeholder="Title">
-<textarea id="d" rows="4" placeholder="কাহিনী..."></textarea>
-<input type="file" id="imgFile" accept="image/*">
-<button class="btn" onclick="publish()" style="width:100%">🚀 Publish - সকলোৱে দেখিব</button>
-<div id="adminPosts" style="margin-top:20px"></div>
-<button class="btn btn-red" onclick="logout()" style="width:100%;margin-top:20px">Logout</button>
+<h2>👑 Dashboard</h2>
+<p style="color:green;font-size:13px">✅ Login Success - manuj123</p>
+<label style="font-size:13px;font-weight:bold;margin-top:15px;display:block">Profile Photo Change:</label>
+<input type="file" id="profileFile" accept="image/*" onchange="changeProfile(event)">
+<hr style="margin:15px 0">
+<input id="t" placeholder="Post Title - যেনে: মোৰ আজিৰ দিন">
+<textarea id="d" rows="4" placeholder="আপোনাৰ কাহিনী লিখক..."></textarea>
+<label style="font-size:13px;font-weight:bold">Post Photo Upload:</label>
+<input type="file" id="f" accept="image/*">
+<img id="preview" style="display:none;width:100%;border-radius:10px;margin-top:10px;max-height:200px;object-fit:cover">
+<button class="btn" onclick="publish()">🚀 Publish কৰক</button>
+<div id="alist" style="margin-top:20px"></div>
+<button class="btn btn-red" onclick="logout()">Logout</button>
 </div>
 </div>
 
 <script>
-var firebaseConfig={databaseURL:"https://manoj-venus-default-rtdb.firebaseio.com"};
-firebase.initializeApp(firebaseConfig);
-var db=firebase.database().ref('posts');
+let posts = JSON.parse(localStorage.getItem('manoj_posts') || '[]');
+let profile = localStorage.getItem('manoj_profile') || '';
+if(profile) document.getElementById('pp').src = profile;
+if(posts.length==0){
+posts=[
+{title:'🌊 নমস্কাৰ! মই মনোজ ভেনাচ',desc:'মোৰ ব্যক্তিগত ব্লগলৈ স্বাগতম! গুৱাহাটীৰ পৰা মৰমেৰে।',img:'',date:'২০ ছেপ্টেম্বৰ ২০২৬'},
+{title:'🏔️ মোৰ যাত্ৰা আৰম্ভ',desc:'আজিৰ পৰা মোৰ কাহিনী ইয়াত লিখিম।',img:'',date:'১৯ ছেপ্টেম্বৰ ২০২৬'}
+];
+}
 
-function renderPublic(){
-db.on('value',snap=>{
-let data=snap.val();let html='';
-if(!data){html='<p style="text-align:center">Post নাই</p>';}
-else{
-Object.keys(data).reverse().forEach(k=>{
-let p=data[k];
-html+=`<div class="post"><small>${p.date}</small><h3>${p.title}</h3><p>${p.desc}</p>${p.img?`<img src="${p.img}">`:''}</div>`;
+function render(){
+let h='';
+posts.slice().reverse().forEach((p,i)=>{
+h+=`<div class="post"><small style="background:#3b82f6;color:white;padding:3px 10px;border-radius:12px;font-size:12px">${p.date}</small><h3 style="margin:10px 0">${p.title}</h3><p style="line-height:1.6;color:#334155">${p.desc}</p>${p.img?`<img src="${p.img}">`:''}</div>`;
 });
-}
-document.getElementById('postList').innerHTML=html;
+document.getElementById('list').innerHTML=h;
+let ah='';
+posts.slice().reverse().forEach((p,i)=>{
+let ri = posts.length-1-i;
+ah+=`<div style="border:1px solid #eee;padding:8px;margin:6px 0;border-radius:8px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px">${p.title.substring(0,25)}</span><button class="btn btn-red" style="width:auto;padding:4px 10px;font-size:12px" onclick="delPost(${ri})">Delete</button></div>`;
 });
+document.getElementById('alist').innerHTML=ah;
+localStorage.setItem('manoj_posts',JSON.stringify(posts));
 }
+
+document.getElementById('f').addEventListener('change',function(e){
+let file=e.target.files[0];
+if(file){
+let r=new FileReader();
+r.onload=function(ev){document.getElementById('preview').src=ev.target.result;document.getElementById('preview').style.display='block';};
+r.readAsDataURL(file);
+}
+});
+
+function changeProfile(e){
+let file=e.target.files[0];
+let r=new FileReader();
+r.onload=function(ev){
+document.getElementById('pp').src=ev.target.result;
+localStorage.setItem('manoj_profile',ev.target.result);
+alert('✅ Profile Photo Change হল!');
+};
+r.readAsDataURL(file);
+}
+
 function openAdmin(){document.getElementById('adminPanel').style.display='block';}
 function closeAdmin(){document.getElementById('adminPanel').style.display='none';}
 function login(){
 if(document.getElementById('pass').value==='manuj123'){
 document.getElementById('loginBox').style.display='none';
 document.getElementById('dashBox').style.display='block';
-loadAdmin();
-}else alert('ভুল Password!');
+render();
+}else alert('ভুল Password! manuj123 দিয়ক');
 }
 function logout(){document.getElementById('dashBox').style.display='none';document.getElementById('loginBox').style.display='block';document.getElementById('pass').value='';closeAdmin();}
 function publish(){
-let title=document.getElementById('t').value;let desc=document.getElementById('d').value;
-let file=document.getElementById('imgFile').files[0];
-if(!title||!desc){alert('লিখক!');return;}
+let t=document.getElementById('t').value;
+let d=document.getElementById('d').value;
+let file=document.getElementById('f').files[0];
+if(!t||!d){alert('Title আৰু কাহিনী লিখক!');return;}
 if(file){
-let r=new FileReader();r.onload=e=>{db.push({title,desc,img:e.target.result,date:new Date().toLocaleDateString('as-IN')});alert('✅ Public হল!');clear();};r.readAsDataURL(file);
-}else{db.push({title,desc,img:'',date:new Date().toLocaleDateString('as-IN')});alert('✅ Public হল!');clear();}
+let r=new FileReader();
+r.onload=e=>{
+posts.push({title:t,desc:d,img:e.target.result,date:new Date().toLocaleDateString('as-IN')});
+render();clearForm();alert('✅ Publish হল! Photo সহ!');
+};
+r.readAsDataURL(file);
+}else{
+posts.push({title:t,desc:d,img:'',date:new Date().toLocaleDateString('as-IN')});
+render();clearForm();alert('✅ Publish হল!');
 }
-function clear(){document.getElementById('t').value='';document.getElementById('d').value='';document.getElementById('imgFile').value='';}
-function loadAdmin(){db.on('value',snap=>{let data=snap.val();let h='';if(data){Object.keys(data).forEach(k=>{h+=`<div style="border:1px solid #eee;padding:8px;margin:5px 0;display:flex;justify-content:space-between"><span>${data[k].title}</span><button class="btn btn-red" style="padding:3px 8px" onclick="delPost('${k}')">Delete</button></div>`;});}document.getElementById('adminPosts').innerHTML=h;});}
-function delPost(k){if(confirm('Delete?')) db.child(k).remove();}
-renderPublic();
+}
+function clearForm(){document.getElementById('t').value='';document.getElementById('d').value='';document.getElementById('f').value='';document.getElementById('preview').style.display='none';}
+function delPost(i){if(confirm('Delete কৰিব নে?')){posts.splice(i,1);render();}}
+render();
 </script>
 </body>
 </html>
