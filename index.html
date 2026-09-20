@@ -6,11 +6,44 @@
 <title>Manuj Art Blog</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1e3a8a">
-<style>body{margin:0;padding:0} iframe{width:100%;height:100vh;border:0} .loader{position:fixed;top:0;left:0;right:0;background:#1e3a8a;color:#fff;text-align:center;padding:15px;font-weight:bold}</style>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f0f2f5;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;text-align:center;padding:20px}
+.box{background:#fff;padding:30px;border-radius:20px;box-shadow:0 5px 20px #0002;max-width:400px;width:100%}
+.logo{font-size:60px;margin-bottom:15px}
+h1{color:#1e3a8a;margin-bottom:10px}
+p{color:#666;margin-bottom:20px}
+.btn{display:block;width:100%;background:#1e3a8a;color:#fff;padding:15px;border-radius:12px;text-decoration:none;font-weight:bold;margin:10px 0;font-size:18px}
+.btn2{background:#e4e6eb;color:#333}
+.install{background:#1877f2;color:#fff;border:0;padding:12px 20px;border-radius:25px;font-weight:bold;margin-top:15px;display:none}
+</style>
 </head>
 <body>
-<div class="loader" id="loader">🎨 Manuj Art Blog Loading...</div>
-<iframe src="http://manuj.art.blog" onload="document.getElementById('loader').style.display='none'"></iframe>
-<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}</script>
+
+<div class="box">
+<div class="logo">🎨</div>
+<h1>Manuj Art Blog</h1>
+<p>Venus Art Gallery Teok<br>Official Art Blog</p>
+
+<a class="btn" href="https://manuj.art.blog" target="_blank">📖 Blog খুলক</a>
+<a class="btn btn2" href="https://borahmanuj32-boop.github.io/Game/">👍 VenusBook খুলক</a>
+
+<button class="install" id="installBtn">📲 App Install কৰক</button>
+
+<p style="margin-top:15px;font-size:13px;color:#999">App Install কৰিলে ফোনত Icon আহিব</p>
+</div>
+
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e)=>{
+ e.preventDefault(); deferredPrompt=e;
+ document.getElementById('installBtn').style.display='inline-block';
+});
+document.getElementById('installBtn').onclick = async ()=>{
+ if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; }
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+</script>
+
 </body>
 </html>
